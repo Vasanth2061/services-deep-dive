@@ -1,7 +1,9 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input,inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { Task, TaskStatus } from '../../task.model';
+import { Task, TaskStatus, TASK_STATUS_OPTIONS } from '../../task.model';
+import { TasksService } from '../../tasks.service';
+import { taskServiceTkoen } from '../../../../main';
 
 @Component({
   selector: 'app-task-item',
@@ -12,6 +14,10 @@ import { Task, TaskStatus } from '../../task.model';
 })
 export class TaskItemComponent {
   task = input.required<Task>();
+
+  taskStatusOptions = inject(TASK_STATUS_OPTIONS);
+
+  private taskService = inject(taskServiceTkoen);
   taskStatus = computed(() => {
     switch (this.task().status) {
       case 'OPEN':
@@ -41,5 +47,6 @@ export class TaskItemComponent {
       default:
         break;
     }
+    this.taskService.updateTaskStatus(taskId, newStatus);
   }
 }
